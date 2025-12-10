@@ -1,0 +1,131 @@
+import { useState } from "react";
+
+const categories = ["All", "Coffee", "Non-Coffee", "Pastries"];
+
+const menuItems = [
+  { id: 1, name: "Americano", category: "Coffee", price: "Rp 28.000", description: "Bold espresso with hot water" },
+  { id: 2, name: "Cappuccino", category: "Coffee", price: "Rp 32.000", description: "Espresso with steamed milk foam" },
+  { id: 3, name: "Caramel Latte", category: "Coffee", price: "Rp 38.000", description: "Sweet caramel meets espresso" },
+  { id: 4, name: "Mocha", category: "Coffee", price: "Rp 38.000", description: "Chocolate and espresso blend" },
+  { id: 5, name: "Flat White", category: "Coffee", price: "Rp 35.000", description: "Velvety microfoam latte" },
+  { id: 6, name: "Vanilla Latte", category: "Coffee", price: "Rp 36.000", description: "Classic vanilla sweetness" },
+  { id: 7, name: "Matcha Latte", category: "Non-Coffee", price: "Rp 35.000", description: "Premium Japanese matcha" },
+  { id: 8, name: "Chocolate", category: "Non-Coffee", price: "Rp 32.000", description: "Rich Belgian chocolate" },
+  { id: 9, name: "Strawberry Smoothie", category: "Non-Coffee", price: "Rp 38.000", description: "Fresh strawberry blend" },
+  { id: 10, name: "Croissant", category: "Pastries", price: "Rp 25.000", description: "Buttery French pastry" },
+  { id: 11, name: "Chocolate Muffin", category: "Pastries", price: "Rp 28.000", description: "Moist chocolate delight" },
+  { id: 12, name: "Blueberry Scone", category: "Pastries", price: "Rp 30.000", description: "Fresh baked with blueberries" },
+];
+
+export function Menu() {
+  const [activeCategory, setActiveCategory] = useState("All");
+
+  const filteredItems = activeCategory === "All" ? menuItems : menuItems.filter((item) => item.category === activeCategory);
+
+  return (
+    <section id="menu" className="py-20 bg-gradient-to-b from-amber-50/30 to-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <div className="inline-block px-4 py-2 bg-amber-100 rounded-full mb-4">
+            <span className="text-amber-900">Full Menu</span>
+          </div>
+          <h2 className="text-4xl sm:text-5xl text-gray-900 mb-4">Our Complete Menu</h2>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">Explore our wide selection of beverages and treats</p>
+        </div>
+
+        {/* Category Filter */}
+        <div className="flex flex-wrap justify-center gap-3 mb-12">
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => setActiveCategory(category)}
+              className={`px-6 py-2.5 rounded-full transition-all ${activeCategory === category ? "bg-amber-900 text-white" : "bg-white text-gray-700 hover:bg-amber-50 border border-gray-200"}`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+
+        {/* Menu Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredItems.map((item) => (
+            <div key={item.id} className="bg-white rounded-2xl p-6 hover:shadow-lg transition-shadow border border-gray-100 shadow-sm">
+              <div className="flex justify-between items-start mb-3">
+                <div className="flex-1">
+                  <h3 className="text-xl text-gray-900 mb-1">{item.name}</h3>
+                  <p className="text-gray-600 text-sm">{item.description}</p>
+                </div>
+                <span className="px-3 py-1 bg-amber-100 text-amber-900 rounded-full text-sm ml-3">{item.category}</span>
+              </div>
+
+              <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
+                <span className="text-xl text-amber-900">{item.price}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+{
+  /* CTA */
+}
+<div className="text-center mt-12">
+  <p className="text-gray-600 mb-4">Follow us on Instagram for more updates</p>
+  <a
+    href="https://www.instagram.com/dellaciouscoffee_?igsh=cTNhcHY1eHptNnY4"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-[#f58529] via-[#dd2a7b] to-[#8134af] text-white rounded-full hover:shadow-lg hover:scale-105 transition-all duration-300"
+  >
+    <Instagram className="w-5 h-5" />
+    dellacious coffee
+  </a>
+</div>;
+
+export function Gallery() {
+  const images = [
+    { id: 1, url: "/image/signature.jpg", alt: "Image 1", area: "1 / 1 / 3 / 3" },
+    { id: 2, url: "/image/galeri1.jpg", alt: "Image 2", area: "3 / 1 / 4 / 2" },
+    { id: 3, url: "/image/galeri.jpg", alt: "Image 3", area: "3 / 2 / 4 / 3" },
+    { id: 4, url: "/image/galeri2.jpg", alt: "Image 4", area: "1 / 3 / 2 / 4" },
+    { id: 5, url: "/image/galeri3.jpg", alt: "Image 5", area: "1 / 4 / 2 / 5" },
+    { id: 6, url: "/image/galeri8.jpg", alt: "Image 6", area: "2 / 3 / 4 / 5" },
+    { id: 7, url: "/image/galeri5.jpg", alt: "Image 7", area: "4 / 1 / 6 / 4" },
+    { id: 8, url: "/image/galeri4.jpg", alt: "Image 8", area: "1 / 5 / 4 / 6" },
+    { id: 9, url: "/image/galeri6.jpg", alt: "Image 9", area: "4 / 4 / 6 / 6" },
+  ];
+
+  return (
+    <section id="gallery" className="py-20 bg-white">
+      <div className="max-w-7xl mx-auto px-4">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <div className="inline-block px-4 py-2 bg-amber-100 rounded-full mb-4">
+            <span className="text-amber-900">Gallery</span>
+          </div>
+          <h2 className="text-4xl sm:text-5xl text-gray-900 mb-4">Moments at Coppie</h2>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">A glimpse into our coffee culture and community</p>
+        </div>
+
+        {/* Grid */}
+        <div
+          className="grid gap-4"
+          style={{
+            gridTemplateColumns: "repeat(5, 1fr)",
+            gridTemplateRows: "repeat(5, 1fr)",
+          }}
+        >
+          {images.map((img) => (
+            <div key={img.id} className="relative overflow-hidden rounded-xl" style={{ gridArea: img.area }}>
+              <img src={img.url} alt={img.alt} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
