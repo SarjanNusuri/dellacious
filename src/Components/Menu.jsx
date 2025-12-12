@@ -1,64 +1,105 @@
 import { useState, useEffect } from "react";
 
-const categories = ["All", "Coffee", "Non-Coffee"];
+// Categories per language
+const CATEGORIES = {
+  en: ["All", "Coffee", "Non-Coffee"],
+  id: ["Semua", "Kopi", "Non-Kopi"],
+};
 
+// Map English ↔ Indonesia
+const CATEGORY_MAP = {
+  en: { All: "Semua", Coffee: "Kopi", "Non-Coffee": "Non-Kopi" },
+  id: { Semua: "All", Kopi: "Coffee", "Non-Kopi": "Non-Coffee" },
+};
+
+// Static texts per language
+const TEXTS = {
+  sectionLabel: { en: "Full Menu", id: "Menu Lengkap" },
+  title: { en: "Our Complete Menu", id: "Menu Lengkap Kami" },
+  description: {
+    en: "Explore our wide selection of beverages and treats",
+    id: "Jelajahi berbagai minuman dan camilan kami",
+  },
+};
+
+// Menu items with multi-language support
 const menuItems = [
   {
     id: 1,
-    name: "Mocho Pistacio",
-    category: "Coffee",
+    name: { en: "Mocho Pistacio", id: "Mocho Pistacio" },
+    category: { en: "Coffee", id: "Kopi" },
     price: "Rp 28.000",
-    description: "Bold espresso with Es",
+    description: { en: "Bold espresso with Es", id: "Espresso bold dengan es" },
     image: "/image/mochapistacio.jpg",
   },
   {
     id: 2,
-    name: "Es Kopi Magang",
-    category: "Coffee",
+    name: { en: "Es Kopi Magang", id: "Es Kopi Magang" },
+    category: { en: "Coffee", id: "Kopi" },
     price: "Rp 30.000",
-    description: "Espresso with steamed milk foam",
+    description: {
+      en: "Espresso with steamed milk foam",
+      id: "Espresso dengan busa susu panas",
+    },
     image: "/image/eskopimagang.jpeg",
   },
   {
     id: 3,
-    name: "Kopi Laut",
-    category: "Coffee",
+    name: { en: "Kopi Laut", id: "Kopi Laut" },
+    category: { en: "Coffee", id: "Kopi" },
     price: "Rp 35.000",
-    description: "Sweet caramel meets espresso",
+    description: { en: "Sweet caramel meets espresso", id: "Karamel manis bertemu espresso" },
     image: "/image/kopilaut.jpg",
   },
   {
     id: 4,
-    name: "Choco Pistachio",
-    category: "Coffee",
+    name: { en: "Choco Pistachio", id: "Choco Pistachio" },
+    category: { en: "Coffee", id: "Kopi" },
     price: "Rp 30.000",
-    description: "Chocolate and espresso blend",
+    description: { en: "Chocolate and espresso blend", id: "Campuran cokelat dan espresso" },
     image: "/image/chocopistachio.jpg",
   },
   {
     id: 5,
-    name: "Pure Matcha",
-    category: "Non-Coffee",
+    name: { en: "Pure Matcha", id: "Pure Matcha" },
+    category: { en: "Non-Coffee", id: "Non-Kopi" },
     price: "Rp 34.000",
-    description: "Premium Japanese matcha",
+    description: { en: "Premium Japanese matcha", id: "Matcha Jepang premium" },
     image: "/image/puremaca.jpg",
   },
   {
     id: 6,
-    name: "Saronde Island",
-    category: "Non-Coffee",
+    name: { en: "Saronde Island", id: "Saronde Island" },
+    category: { en: "Non-Coffee", id: "Non-Kopi" },
     price: "Rp 35.000",
-    description: "Rich Belgian chocolate",
+    description: { en: "Rich Belgian chocolate", id: "Cokelat Belgia kaya rasa" },
     image: "/image/sarondeisland.jpg",
   },
 ];
 
-export function Menu() {
-  const [activeCategory, setActiveCategory] = useState("All");
+// Fungsi untuk translate kategori dari bahasa lama ke bahasa baru
+function translateCategory(category, fromLang, toLang) {
+  // Map ke English dulu
+  const englishCategory = CATEGORY_MAP[fromLang][category] || category;
+  // Map ke bahasa baru
+  return Object.entries(CATEGORY_MAP[toLang]).find(([key, val]) => key === englishCategory || val === englishCategory)?.[0] || CATEGORIES[toLang][0];
+}
 
-  const filteredItems = activeCategory === "All" ? menuItems : menuItems.filter((item) => item.category === activeCategory);
+export function Menu({ lang }) {
+  const [activeCategory, setActiveCategory] = useState(CATEGORIES[lang][0]);
+  const [prevLang, setPrevLang] = useState(lang);
 
-  // Carousel logic
+  // Ketika bahasa berubah, tetap pertahankan kategori aktif
+  useEffect(() => {
+    if (prevLang !== lang) {
+      setActiveCategory((prev) => translateCategory(prev, prevLang, lang));
+      setPrevLang(lang);
+    }
+  }, [lang]);
+
+  const filteredItems = activeCategory === CATEGORIES[lang][0] ? menuItems : menuItems.filter((item) => item.category[lang] === activeCategory);
+
+  // Carousel state
   const [isOpen, setIsOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fade, setFade] = useState(false);
@@ -86,7 +127,6 @@ export function Menu() {
     }, 200);
   };
 
-  // AUTO SLIDE
   useEffect(() => {
     if (!isOpen) return;
     const interval = setInterval(() => nextSlide(), 3500);
@@ -99,15 +139,15 @@ export function Menu() {
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-block px-4 py-2 bg-amber-100 rounded-full mb-4">
-            <span className="text-amber-900">Full Menu</span>
+            <span className="text-amber-900">{TEXTS.sectionLabel[lang]}</span>
           </div>
-          <h2 className="text-4xl sm:text-5xl text-gray-900 mb-4">Our Complete Menu</h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">Explore our wide selection of beverages and treats</p>
+          <h2 className="text-4xl sm:text-5xl text-gray-900 mb-4">{TEXTS.title[lang]}</h2>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">{TEXTS.description[lang]}</p>
         </div>
 
         {/* Category Filter */}
         <div className="flex flex-wrap justify-center gap-3 mb-12">
-          {categories.map((category) => (
+          {CATEGORIES[lang].map((category) => (
             <button
               key={category}
               onClick={() => setActiveCategory(category)}
@@ -122,16 +162,14 @@ export function Menu() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredItems.map((item, index) => (
             <div key={item.id} className="bg-white rounded-2xl p-6 hover:shadow-lg transition-shadow border border-gray-100 shadow-sm">
-              <img src={item.image} alt={item.name} onClick={() => openCarousel(index)} className="w-full h-48 object-contain rounded-xl mb-4 cursor-pointer" />
-
+              <img src={item.image} alt={item.name[lang]} onClick={() => openCarousel(index)} className="w-full h-48 object-contain rounded-xl mb-4 cursor-pointer" />
               <div className="flex justify-between items-start mb-3">
                 <div className="flex-1">
-                  <h3 className="text-xl text-gray-900 mb-1">{item.name}</h3>
-                  <p className="text-gray-600 text-sm">{item.description}</p>
+                  <h3 className="text-xl text-gray-900 mb-1">{item.name[lang]}</h3>
+                  <p className="text-gray-600 text-sm">{item.description[lang]}</p>
                 </div>
-                <span className="px-3 py-1 bg-amber-100 text-amber-900 rounded-full text-sm ml-3">{item.category}</span>
+                <span className="px-3 py-1 bg-amber-100 text-amber-900 rounded-full text-sm ml-3">{item.category[lang]}</span>
               </div>
-
               <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
                 <span className="text-xl text-amber-900">{item.price}</span>
               </div>
@@ -140,25 +178,14 @@ export function Menu() {
         </div>
       </div>
 
-      {/* ===================== CAROUSEL MODAL ===================== */}
+      {/* Carousel Modal */}
       {isOpen && (
-        <div
-          className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4"
-          onClick={closeCarousel} // klik area luar → close
-        >
-          <div
-            className="relative w-full max-w-2xl"
-            onClick={(e) => e.stopPropagation()} // klik gambar tidak close
-          >
-            {/* CLOSE BUTTON (Desktop + Mobile) */}
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={closeCarousel}>
+          <div className="relative w-full max-w-2xl" onClick={(e) => e.stopPropagation()}>
             <button onClick={closeCarousel} className="absolute top-2 right-2 bg-black/50 text-white px-3 py-2 rounded-full text-lg md:text-xl">
               ✕
             </button>
-
-            {/* Main Image */}
             <img src={filteredItems[currentIndex].image} className={`w-full max-h-[75vh] object-contain rounded-xl transition-opacity duration-300 ${fade ? "opacity-0" : "opacity-100"}`} />
-
-            {/* Prev */}
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -168,8 +195,6 @@ export function Menu() {
             >
               ❮
             </button>
-
-            {/* Next */}
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -179,8 +204,6 @@ export function Menu() {
             >
               ❯
             </button>
-
-            {/* Thumbnails */}
             <div className="flex gap-3 mt-4 overflow-x-auto justify-center">
               {filteredItems.map((item, index) => (
                 <img

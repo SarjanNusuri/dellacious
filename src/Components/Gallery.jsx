@@ -1,20 +1,33 @@
 import { useState } from "react";
 import { Instagram } from "lucide-react";
 
-export function Gallery() {
-  const images = [
-    { id: 1, url: "/image/signature.jpg", alt: "Image 1", area: "1 / 1 / 3 / 3" },
-    { id: 2, url: "/image/galeri1.jpg", alt: "Image 2", area: "3 / 1 / 4 / 2" },
-    { id: 3, url: "/image/galeri.jpg", alt: "Image 3", area: "3 / 2 / 4 / 3" },
-    { id: 4, url: "/image/galeri2.jpg", alt: "Image 4", area: "1 / 3 / 2 / 4" },
-    { id: 5, url: "/image/galeri3.jpg", alt: "Image 5", area: "1 / 4 / 2 / 5" },
-    { id: 6, url: "/image/galeri8.jpg", alt: "Image 6", area: "2 / 3 / 4 / 5" },
-    { id: 7, url: "/image/galeri5.jpg", alt: "Image 7", area: "4 / 1 / 6 / 4" },
-    { id: 8, url: "/image/galeri4.jpg", alt: "Image 8", area: "1 / 5 / 4 / 6" },
-    { id: 9, url: "/image/galeri6.jpg", alt: "Image 9", area: "4 / 4 / 6 / 6" },
-  ];
+const TEXTS = {
+  sectionLabel: { en: "Gallery", id: "Galeri" },
+  title: { en: "Moments at Coppie", id: "Momen di Coppie" },
+  description: {
+    en: "A glimpse into our coffee culture and community",
+    id: "Sekilas tentang budaya kopi dan komunitas kami",
+  },
+  instagramCTA: {
+    en: "Follow us on Instagram for more updates",
+    id: "Ikuti kami di Instagram untuk info terbaru",
+  },
+  instagramName: { en: "dellacious coffee", id: "dellacious coffee" },
+};
 
-  // ------- Carousel State -------
+const images = [
+  { id: 1, url: "/image/signature.jpg", alt: "Image 1", area: "1 / 1 / 3 / 3" },
+  { id: 2, url: "/image/galeri1.jpg", alt: "Image 2", area: "3 / 1 / 4 / 2" },
+  { id: 3, url: "/image/galeri.jpg", alt: "Image 3", area: "3 / 2 / 4 / 3" },
+  { id: 4, url: "/image/galeri2.jpg", alt: "Image 4", area: "1 / 3 / 2 / 4" },
+  { id: 5, url: "/image/galeri3.jpg", alt: "Image 5", area: "1 / 4 / 2 / 5" },
+  { id: 6, url: "/image/galeri8.jpg", alt: "Image 6", area: "2 / 3 / 4 / 5" },
+  { id: 7, url: "/image/galeri5.jpg", alt: "Image 7", area: "4 / 1 / 6 / 4" },
+  { id: 8, url: "/image/galeri4.jpg", alt: "Image 8", area: "1 / 5 / 4 / 6" },
+  { id: 9, url: "/image/galeri6.jpg", alt: "Image 9", area: "4 / 4 / 6 / 6" },
+];
+
+export function Gallery({ lang = "en" }) {
   const [open, setOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -22,9 +35,7 @@ export function Gallery() {
     setCurrentIndex(index);
     setOpen(true);
   };
-
   const closeCarousel = () => setOpen(false);
-
   const next = () => setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   const prev = () => setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
 
@@ -34,10 +45,10 @@ export function Gallery() {
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-block px-4 py-2 bg-amber-100 rounded-full mb-4">
-            <span className="text-amber-900 font-semibold">Gallery</span>
+            <span className="text-amber-900 font-semibold">{TEXTS.sectionLabel[lang]}</span>
           </div>
-          <h2 className="text-4xl sm:text-5xl text-gray-900 mb-4">Moments at Coppie</h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">A glimpse into our coffee culture and community</p>
+          <h2 className="text-4xl sm:text-5xl text-gray-900 mb-4">{TEXTS.title[lang]}</h2>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">{TEXTS.description[lang]}</p>
         </div>
 
         {/* Grid */}
@@ -57,7 +68,7 @@ export function Gallery() {
 
         {/* CTA Instagram */}
         <div className="text-center mt-12">
-          <p className="text-gray-600 mb-4">Follow us on Instagram for more updates</p>
+          <p className="text-gray-600 mb-4">{TEXTS.instagramCTA[lang]}</p>
           <a
             href="https://www.instagram.com/dellaciouscoffee_?igsh=cTNhcHY1eHptNnY4"
             target="_blank"
@@ -65,7 +76,7 @@ export function Gallery() {
             className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-[#f58529] via-[#dd2a7b] to-[#8134af] text-white rounded-full hover:shadow-lg hover:scale-105 transition-all duration-300"
           >
             <Instagram className="w-5 h-5" />
-            dellacious coffee
+            {TEXTS.instagramName[lang]}
           </a>
         </div>
       </div>
