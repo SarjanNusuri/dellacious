@@ -184,6 +184,7 @@ export function Menu() {
             <div className="flex gap-3 mt-4 overflow-x-auto justify-center">
               {filteredItems.map((item, index) => (
                 <img
+                  loading="lazy"
                   key={item.id}
                   src={item.image}
                   onClick={(e) => {
