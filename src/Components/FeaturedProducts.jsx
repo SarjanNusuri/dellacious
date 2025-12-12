@@ -1,6 +1,5 @@
+import { useState } from "react";
 import { Star } from "lucide-react";
-// Hapus karena tidak digunakan
-// import { ImageWithFallback } from './figma/ImageWithFallback';
 
 const products = [
   {
@@ -33,6 +32,16 @@ const products = [
 ];
 
 export function FeaturedProducts() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentImage, setCurrentImage] = useState("");
+
+  const openModal = (imageUrl) => {
+    setCurrentImage(imageUrl);
+    setIsOpen(true);
+  };
+
+  const closeModal = () => setIsOpen(false);
+
   return (
     <section id="products" className="py-20 bg-gradient-to-b from-white to-amber-50/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -50,8 +59,8 @@ export function FeaturedProducts() {
           {products.map((product) => (
             <div key={product.id} className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
               {/* Image */}
-              <div className="relative h-80 overflow-hidden">
-                <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+              <div className="relative h-80 overflow-hidden cursor-pointer">
+                <img src={product.image} alt={product.name} onClick={() => openModal(product.image)} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
 
                 {/* Tag */}
                 <div className="absolute top-4 right-4 px-3 py-1.5 bg-amber-900 text-white rounded-full text-sm">{product.tag}</div>
@@ -76,6 +85,27 @@ export function FeaturedProducts() {
           ))}
         </div>
       </div>
+
+      {/* ===================== MODAL IMAGE ===================== */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4"
+          onClick={closeModal} // klik area luar → close
+        >
+          <div
+            className="relative max-w-3xl w-full"
+            onClick={(e) => e.stopPropagation()} // klik gambar tidak close
+          >
+            {/* Close Button */}
+            <button onClick={closeModal} className="absolute top-2 right-2 bg-black/50 text-white px-3 py-2 rounded-full text-lg md:text-xl">
+              ✕
+            </button>
+
+            {/* Main Image */}
+            <img src={currentImage} className="w-full max-h-[80vh] object-contain rounded-xl" />
+          </div>
+        </div>
+      )}
     </section>
   );
 }

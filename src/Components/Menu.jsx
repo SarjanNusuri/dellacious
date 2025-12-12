@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const categories = ["All", "Coffee", "Non-Coffee"];
 
@@ -51,36 +51,47 @@ const menuItems = [
     description: "Rich Belgian chocolate",
     image: "/image/sarondeisland.jpg",
   },
-  // {
-  //   id: 7,
-  //   name: "Croissant",
-  //   category: "Pastries",
-  //   price: "Rp 25.000",
-  //   description: "Buttery French pastry",
-  //   image: "https://source.unsplash.com/400x300/?croissant,pastry",
-  // },
-  // {
-  //   id: 8,
-  //   name: "Chocolate Muffin",
-  //   category: "Pastries",
-  //   price: "Rp 28.000",
-  //   description: "Moist chocolate delight",
-  //   image: "https://source.unsplash.com/400x300/?chocolatemuffin",
-  // },
-  // {
-  //   id: 9,
-  //   name: "Blueberry Scone",
-  //   category: "Pastries",
-  //   price: "Rp 30.000",
-  //   description: "Fresh baked with blueberries",
-  //   image: "https://source.unsplash.com/400x300/?blueberry,scone",
-  // },
 ];
 
 export function Menu() {
   const [activeCategory, setActiveCategory] = useState("All");
 
   const filteredItems = activeCategory === "All" ? menuItems : menuItems.filter((item) => item.category === activeCategory);
+
+  // Carousel logic
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [fade, setFade] = useState(false);
+
+  const openCarousel = (index) => {
+    setCurrentIndex(index);
+    setIsOpen(true);
+  };
+
+  const closeCarousel = () => setIsOpen(false);
+
+  const prevSlide = () => {
+    setFade(true);
+    setTimeout(() => {
+      setCurrentIndex((prev) => (prev === 0 ? filteredItems.length - 1 : prev - 1));
+      setFade(false);
+    }, 200);
+  };
+
+  const nextSlide = () => {
+    setFade(true);
+    setTimeout(() => {
+      setCurrentIndex((prev) => (prev === filteredItems.length - 1 ? 0 : prev + 1));
+      setFade(false);
+    }, 200);
+  };
+
+  // AUTO SLIDE
+  useEffect(() => {
+    if (!isOpen) return;
+    const interval = setInterval(() => nextSlide(), 3500);
+    return () => clearInterval(interval);
+  }, [isOpen, currentIndex]);
 
   return (
     <section id="menu" className="py-20 bg-gradient-to-b from-amber-50/30 to-white">
@@ -109,10 +120,9 @@ export function Menu() {
 
         {/* Menu Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredItems.map((item) => (
+          {filteredItems.map((item, index) => (
             <div key={item.id} className="bg-white rounded-2xl p-6 hover:shadow-lg transition-shadow border border-gray-100 shadow-sm">
-              {/* Gambar */}
-              <img src={item.image} alt={item.name} className="w-full h-48 object-contain rounded-xl mb-4" />
+              <img src={item.image} alt={item.name} onClick={() => openCarousel(index)} className="w-full h-48 object-contain rounded-xl mb-4 cursor-pointer" />
 
               <div className="flex justify-between items-start mb-3">
                 <div className="flex-1">
@@ -129,6 +139,64 @@ export function Menu() {
           ))}
         </div>
       </div>
+
+      {/* ===================== CAROUSEL MODAL ===================== */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4"
+          onClick={closeCarousel} // klik area luar → close
+        >
+          <div
+            className="relative w-full max-w-2xl"
+            onClick={(e) => e.stopPropagation()} // klik gambar tidak close
+          >
+            {/* CLOSE BUTTON (Desktop + Mobile) */}
+            <button onClick={closeCarousel} className="absolute top-2 right-2 bg-black/50 text-white px-3 py-2 rounded-full text-lg md:text-xl">
+              ✕
+            </button>
+
+            {/* Main Image */}
+            <img src={filteredItems[currentIndex].image} className={`w-full max-h-[75vh] object-contain rounded-xl transition-opacity duration-300 ${fade ? "opacity-0" : "opacity-100"}`} />
+
+            {/* Prev */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                prevSlide();
+              }}
+              className="absolute left-2 top-1/2 -translate-y-1/2 text-white text-4xl"
+            >
+              ❮
+            </button>
+
+            {/* Next */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                nextSlide();
+              }}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-white text-4xl"
+            >
+              ❯
+            </button>
+
+            {/* Thumbnails */}
+            <div className="flex gap-3 mt-4 overflow-x-auto justify-center">
+              {filteredItems.map((item, index) => (
+                <img
+                  key={item.id}
+                  src={item.image}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setCurrentIndex(index);
+                  }}
+                  className={`w-20 h-20 object-cover rounded-lg cursor-pointer border-2 ${currentIndex === index ? "border-amber-500" : "border-transparent opacity-70"}`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

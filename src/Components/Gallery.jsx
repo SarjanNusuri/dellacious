@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Instagram } from "lucide-react";
 
 export function Gallery() {
@@ -12,6 +13,20 @@ export function Gallery() {
     { id: 8, url: "/image/galeri4.jpg", alt: "Image 8", area: "1 / 5 / 4 / 6" },
     { id: 9, url: "/image/galeri6.jpg", alt: "Image 9", area: "4 / 4 / 6 / 6" },
   ];
+
+  // ------- Carousel State -------
+  const [open, setOpen] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const openCarousel = (index) => {
+    setCurrentIndex(index);
+    setOpen(true);
+  };
+
+  const closeCarousel = () => setOpen(false);
+
+  const next = () => setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+  const prev = () => setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
 
   return (
     <section id="gallery" className="py-20 bg-white">
@@ -33,9 +48,9 @@ export function Gallery() {
             gridTemplateRows: "repeat(5, minmax(100px, auto))",
           }}
         >
-          {images.map((img) => (
-            <div key={img.id} className="relative overflow-hidden rounded-xl" style={{ gridArea: img.area }}>
-              <img src={img.url} alt={img.alt} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+          {images.map((img, i) => (
+            <div key={img.id} className="relative overflow-hidden rounded-xl cursor-pointer" style={{ gridArea: img.area }} onClick={() => openCarousel(i)}>
+              <img src={img.url} alt={img.alt} loading="lazy" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
             </div>
           ))}
         </div>
@@ -54,6 +69,44 @@ export function Gallery() {
           </a>
         </div>
       </div>
+
+      {/* ---------------- CAROUSEL MODAL ---------------- */}
+      {open && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={closeCarousel}>
+          <div className="relative max-w-3xl w-full" onClick={(e) => e.stopPropagation()}>
+            {/* CLOSE BUTTON */}
+            <button onClick={closeCarousel} className="absolute top-3 right-3 bg-black/50 text-white px-3 py-1 rounded-full text-xl md:text-2xl">
+              ✕
+            </button>
+
+            {/* Main Image */}
+            <img src={images[currentIndex].url} loading="lazy" className="w-full max-h-[75vh] object-contain rounded-xl" />
+
+            {/* Prev */}
+            <button onClick={prev} className="absolute left-2 top-1/2 -translate-y-1/2 text-white text-4xl">
+              ❮
+            </button>
+
+            {/* Next */}
+            <button onClick={next} className="absolute right-2 top-1/2 -translate-y-1/2 text-white text-4xl">
+              ❯
+            </button>
+
+            {/* Thumbnails */}
+            <div className="flex gap-4 mt-4 overflow-x-auto justify-center">
+              {images.map((img, i) => (
+                <img
+                  key={img.id}
+                  src={img.url}
+                  loading="lazy"
+                  onClick={() => setCurrentIndex(i)}
+                  className={`w-20 h-20 object-cover rounded-md cursor-pointer border-2 ${i === currentIndex ? "border-amber-500" : "border-transparent opacity-60"}`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
