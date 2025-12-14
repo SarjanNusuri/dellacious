@@ -58,7 +58,7 @@ function Header({ lang, toggleLang }) {
       {/* NAVBAR */}
       <nav className="container mx-auto px-6 relative z-20 flex justify-between items-center">
         <div className="flex items-center">
-          <img src="/image/logo.png" alt="DellaCious Logo" className="h-16 w-auto md:h-24 object-contain" />
+          <img src="/image/logo.png" alt="DellaCious Logo" loading="lazy" className="h-16 w-auto md:h-24 object-contain" />
         </div>
 
         <div className="hidden md:flex space-x-8 text-sm font-semibold">
