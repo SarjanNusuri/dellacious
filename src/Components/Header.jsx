@@ -7,7 +7,7 @@ function Header({ lang, toggleLang }) {
   const [bgIndex, setBgIndex] = useState(0); // index background
 
   // Daftar gambar background
-  const bgImages = ["/image/Heading.png", "/image/dellacious.png", "/image/dellacious1.jpeg", "/image/dellacious2.jpeg"];
+  const bgImages = ["/image/dellacious.png", "/image/dellacious.png", "/image/dellacious1.jpeg", "/image/dellacious2.jpeg", "/image/dellacious3.jfif", "/image/dellacious5.jfif"];
 
   // Ganti gambar setiap 5 detik
   useEffect(() => {

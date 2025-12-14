@@ -24,9 +24,21 @@ function App() {
   return (
     <>
       {/* Tombol ubah bahasa */}
-      <div className="fixed top-4 right-4 z-50">
-        <button onClick={toggleLang} className="px-4 py-2 bg-amber-900 text-white rounded-full shadow hover:scale-105 transition">
-          {lang === "id" ? "Bahasa Indonesia" : "English"}
+      <div className="fixed bottom-24 right-6 z-50 flex flex-col gap-2">
+        <button
+          onClick={() => toggleLang("id")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-full shadow transition
+      ${lang === "id" ? "bg-red-600 text-white" : "bg-gray-800 text-white hover:scale-105"}`}
+        >
+          🇮🇩 ID
+        </button>
+
+        <button
+          onClick={() => toggleLang("en")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-full shadow transition
+      ${lang === "en" ? "bg-blue-600 text-white" : "bg-gray-800 text-white hover:scale-105"}`}
+        >
+          🇬🇧 EN
         </button>
       </div>
 
